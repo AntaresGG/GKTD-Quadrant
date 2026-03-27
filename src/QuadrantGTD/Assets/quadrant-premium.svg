@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 高级渐变定义 -->
+    <radialGradient id="bgGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- 象限渐变 -->
+    <linearGradient id="urgent_important" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF3B30;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#FF6B6B;stop-opacity:0.85" />
+      <stop offset="100%" style="stop-color:#FF8E8E;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <linearGradient id="important_not_urgent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#007AFF;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#4A90E2;stop-opacity:0.85" />
+      <stop offset="100%" style="stop-color:#74A9F0;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <linearGradient id="urgent_not_important" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9500;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#FFB347;stop-opacity:0.85" />
+      <stop offset="100%" style="stop-color:#FFC977;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <linearGradient id="not_urgent_not_important" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8E8E93;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#A8A8A8;stop-opacity:0.85" />
+      <stop offset="100%" style="stop-color:#C7C7CC;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <!-- 阴影和发光效果 -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="6" dy="6" stdDeviation="12" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- 背景 -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGradient)" filter="url(#shadow)" stroke="#e1e5e9" stroke-width="3"/>
+  
+  <!-- 四象限扇形区域 -->
+  <!-- Q1: 重要且紧急 (右上, 红色) -->
+  <path d="M 256 16 A 240 240 0 0 1 496 256 L 256 256 Z" fill="url(#urgent_important)" filter="url(#glow)"/>
+  
+  <!-- Q2: 重要不紧急 (左上, 蓝色) -->  
+  <path d="M 16 256 A 240 240 0 0 1 256 16 L 256 256 Z" fill="url(#important_not_urgent)" filter="url(#glow)"/>
+  
+  <!-- Q3: 不重要但紧急 (左下, 橙色) -->
+  <path d="M 256 496 A 240 240 0 0 1 16 256 L 256 256 Z" fill="url(#urgent_not_important)" filter="url(#glow)"/>
+  
+  <!-- Q4: 不重要不紧急 (右下, 灰色) -->
+  <path d="M 496 256 A 240 240 0 0 1 256 496 L 256 256 Z" fill="url(#not_urgent_not_important)" filter="url(#glow)"/>
+  
+  <!-- 分割线 -->
+  <line x1="256" y1="30" x2="256" y2="482" stroke="#ffffff" stroke-width="4" opacity="0.9"/>
+  <line x1="30" y1="256" x2="482" y2="256" stroke="#ffffff" stroke-width="4" opacity="0.9"/>
+  
+  <!-- 中央焦点 -->
+  <circle cx="256" cy="256" r="20" fill="#ffffff" stroke="#2c3e50" stroke-width="3" filter="url(#shadow)"/>
+  <circle cx="256" cy="256" r="10" fill="#2c3e50"/>
+  
+  <!-- 象限图标和标识 -->
+  <!-- Q1 图标: 闪电 (紧急+重要) -->
+  <g transform="translate(350, 120)">
+    <path d="M-10,-15 L5,-5 L-2,-5 L8,15 L-7,5 L0,5 L-10,-15 Z" fill="#ffffff" stroke="#d63031" stroke-width="1"/>
+    <text x="0" y="35" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">DO</text>
+  </g>
+  
+  <!-- Q2 图标: 日历 (重要不紧急) -->
+  <g transform="translate(162, 120)">
+    <rect x="-8" y="-8" width="16" height="16" rx="2" fill="#ffffff" stroke="#0984e3" stroke-width="1"/>
+    <line x1="-5" y1="-6" x2="5" y2="-6" stroke="#0984e3" stroke-width="1"/>
+    <line x1="-5" y1="-2" x2="5" y2="-2" stroke="#0984e3" stroke-width="1"/>
+    <line x1="-5" y1="2" x2="0" y2="2" stroke="#0984e3" stroke-width="1"/>
+    <text x="0" y="35" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">PLAN</text>
+  </g>
+  
+  <!-- Q3 图标: 委托箭头 (不重要但紧急) -->
+  <g transform="translate(162, 392)">
+    <path d="M-10,0 L5,0 M0,-5 L5,0 L0,5" fill="none" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="8" cy="0" r="3" fill="#ffffff" stroke="#e17055" stroke-width="1"/>
+    <text x="0" y="-25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">DELEGATE</text>
+  </g>
+  
+  <!-- Q4 图标: 删除 (不重要不紧急) -->
+  <g transform="translate(350, 392)">
+    <circle cx="0" cy="0" r="8" fill="none" stroke="#ffffff" stroke-width="2"/>
+    <line x1="-5" y1="-5" x2="5" y2="5" stroke="#ffffff" stroke-width="2"/>
+    <line x1="5" y1="-5" x2="-5" y2="5" stroke="#ffffff" stroke-width="2"/>
+    <text x="0" y="-25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">DELETE</text>
+  </g>
+  
+  <!-- 外圈装饰 -->
+  <circle cx="256" cy="256" r="240" fill="none" stroke="#34495e" stroke-width="2" opacity="0.3"/>
+  
+  <!-- 重要性和紧急性标签 -->
+  <text x="256" y="45" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#2c3e50" text-anchor="middle">URGENT</text>
+  <text x="45" y="260" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#2c3e50" text-anchor="middle" transform="rotate(-90, 45, 260)">IMPORTANT</text>
+</svg>

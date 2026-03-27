@@ -1,0 +1,61 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- General -->
+    <x:String x:Key="AppTitle">GKQuandrant</x:String>
+    <x:String x:Key="AppSubtitle">GTD Task Management</x:String>
+    
+    <!-- Actions -->
+    <x:String x:Key="AddTask">+ Add Task</x:String>
+    <x:String x:Key="ProjectManagement">Projects</x:String>
+    <x:String x:Key="SwitchLanguage">Language</x:String>
+    
+    <!-- Quadrants -->
+    <x:String x:Key="Q1Title">Q1: Urgent &amp; Important</x:String>
+    <x:String x:Key="Q1Subtitle">Do First</x:String>
+    <x:String x:Key="Q2Title">Q2: Not Urgent &amp; Important</x:String>
+    <x:String x:Key="Q2Subtitle">Schedule</x:String>
+    <x:String x:Key="Q3Title">Q3: Urgent &amp; Not Important</x:String>
+    <x:String x:Key="Q3Subtitle">Delegate</x:String>
+    <x:String x:Key="Q4Title">Q4: Not Urgent &amp; Not Important</x:String>
+    <x:String x:Key="Q4Subtitle">Eliminate</x:String>
+    
+    <!-- Sidebar -->
+    <x:String x:Key="ProjectFilter">Project Filter</x:String>
+    <x:String x:Key="AllProjects">All</x:String>
+    
+    <!-- Task View -->
+    <x:String x:Key="CompletedTasks">Completed Tasks</x:String>
+    <x:String x:Key="ArchiveSubtitle">Archived tasks</x:String>
+    <x:String x:Key="Restore">Restore</x:String>
+    <x:String x:Key="Delete">Delete</x:String>
+    <x:String x:Key="Edit">Edit</x:String>
+    <x:String x:Key="Complete">Complete</x:String>
+    <x:String x:Key="CompletedAt">Completed At: {0:yyyy-MM-dd HH:mm}</x:String>
+    
+    <!-- Dialogs -->
+    <x:String x:Key="TaskContent">Task Content</x:String>
+    <x:String x:Key="SelectQuadrant">Quadrant</x:String>
+    <x:String x:Key="SelectProject">Project</x:String>
+    <x:String x:Key="Priority">Priority</x:String>
+    <x:String x:Key="DueDate">Due Date</x:String>
+    <x:String x:Key="Description">Notes</x:String>
+    <x:String x:Key="Cancel">Cancel</x:String>
+    <x:String x:Key="Save">Save</x:String>
+    <x:String x:Key="EnterTaskTitle">Enter task title...</x:String>
+    <x:String x:Key="EnterTaskDescription">Optional: Add notes...</x:String>
+    <x:String x:Key="NewTask">New Task</x:String>
+    <x:String x:Key="EditTask">Edit Task</x:String>
+    <x:String x:Key="NoProject">No Project</x:String>
+    <x:String x:Key="PriorityLow">Low</x:String>
+    <x:String x:Key="PriorityMedium">Medium</x:String>
+    <x:String x:Key="PriorityHigh">High</x:String>
+    
+    <!-- Project Management -->
+    <x:String x:Key="ProjectManagementTitle">Project Management</x:String>
+    <x:String x:Key="AddNewProject">Add New Project</x:String>
+    <x:String x:Key="ProjectName">Project Name</x:String>
+    <x:String x:Key="SelectColor">Select Color</x:String>
+    <x:String x:Key="AddProject">Add Project</x:String>
+    <x:String x:Key="Close">Close</x:String>
+    <x:String x:Key="ProjectCreatedAt">Created At: {0:yyyy-MM-dd}</x:String>
+</ResourceDictionary>

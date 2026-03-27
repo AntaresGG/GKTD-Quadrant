@@ -1,0 +1,104 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:QuadrantGTD.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="using:QuadrantGTD.Models"
+        mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="600"
+        x:Class="QuadrantGTD.Views.TaskEditDialog"
+        x:DataType="vm:TaskEditDialogViewModel"
+        Width="550" Height="600"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding DialogTitle}"
+        CanResize="False"
+        Background="#F8FAFC">
+
+    <Design.DataContext>
+        <vm:TaskEditDialogViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *, Auto" Margin="32">
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="{Binding DialogTitle}" 
+                   FontSize="24" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,32"/>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="20">
+                <!-- Task Title -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{DynamicResource TaskContent}" FontSize="13" FontWeight="SemiBold" Foreground="#64748B"/>
+                    <TextBox Text="{Binding TaskTitle}" Watermark="{DynamicResource EnterTaskTitle}"
+                             AcceptsReturn="True" TextWrapping="Wrap" Height="100" CornerRadius="10"/>
+                </StackPanel>
+
+                <Grid ColumnDefinitions="*, 20, *">
+                    <!-- Quadrant Selection -->
+                    <StackPanel Grid.Column="0" Spacing="8">
+                        <TextBlock Text="{DynamicResource SelectQuadrant}" FontSize="13" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <ComboBox ItemsSource="{Binding Quadrants}" SelectedItem="{Binding SelectedQuadrantItem}"
+                                  HorizontalAlignment="Stretch" CornerRadius="10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Priority Selection -->
+                    <StackPanel Grid.Column="2" Spacing="8">
+                        <TextBlock Text="{DynamicResource Priority}" FontSize="13" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <ComboBox ItemsSource="{Binding Priorities}" SelectedItem="{Binding SelectedPriority}"
+                                  HorizontalAlignment="Stretch" CornerRadius="10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+
+                <Grid ColumnDefinitions="*, 20, *">
+                    <!-- Project Selection -->
+                    <StackPanel Grid.Column="0" Spacing="8">
+                        <TextBlock Text="{DynamicResource SelectProject}" FontSize="13" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject}"
+                                  HorizontalAlignment="Stretch" CornerRadius="10">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:Project">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Ellipse Width="10" Height="10" Fill="{Binding Color}"/>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Due Date -->
+                    <StackPanel Grid.Column="2" Spacing="8">
+                        <TextBlock Text="{DynamicResource DueDate}" FontSize="13" FontWeight="SemiBold" Foreground="#64748B"/>
+                        <DatePicker SelectedDate="{Binding DueDate}" HorizontalAlignment="Stretch" CornerRadius="10"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Description -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{DynamicResource Description}" FontSize="13" FontWeight="SemiBold" Foreground="#64748B"/>
+                    <TextBox Text="{Binding Description}" Watermark="{DynamicResource EnterTaskDescription}"
+                             AcceptsReturn="True" TextWrapping="Wrap" Height="80" CornerRadius="10"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12" Margin="0,32,0,0">
+            <Button Content="{DynamicResource Cancel}" Click="CancelButton_Click" 
+                    Background="#F1F5F9" Foreground="#475569" Width="100" Padding="0,10"/>
+            <Button Content="{DynamicResource Save}" Click="SaveButton_Click" 
+                    Classes="HeaderButton" Width="100" Padding="0,10" IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

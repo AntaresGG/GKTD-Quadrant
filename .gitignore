@@ -1,0 +1,33 @@
+# Markdown files
+*.md
+
+# .NET build outputs
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# dotnet publish output
+publish/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Rider / VS / VSCode
+.idea/
+.vscode/
+*.DotSettings
+*.DotSettings.user
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude local config
+.claude/
+CLAUDE.local.md

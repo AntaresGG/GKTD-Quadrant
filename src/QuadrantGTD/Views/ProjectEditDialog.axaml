@@ -1,0 +1,80 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:QuadrantGTD.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+        x:Class="QuadrantGTD.Views.ProjectEditDialog"
+        x:DataType="vm:ProjectEditDialogViewModel"
+        Title="{Binding DialogTitle}"
+        Width="400" Height="250"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        FontFamily="Microsoft YaHei UI, SimHei, sans-serif">
+
+    <Design.DataContext>
+        <vm:ProjectEditDialogViewModel/>
+    </Design.DataContext>
+
+    <Border Background="{DynamicResource MaterialDesignPaper}"
+            Padding="25">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+            <!-- Project Name -->
+            <TextBlock Grid.Row="0"
+                       Text="项目名称："
+                       FontSize="15"
+                       VerticalAlignment="Center"
+                       FontFamily="Microsoft YaHei UI, SimHei, sans-serif"
+                       Margin="0,0,0,10"/>
+            <TextBox Grid.Row="1"
+                     Text="{Binding ProjectName}"
+                     Watermark="请输入项目名称"
+                     FontSize="15"
+                     FontFamily="Microsoft YaHei UI, SimHei, sans-serif"
+                     Margin="0,0,0,20"/>
+
+            <!-- Color Selection -->
+            <TextBlock Grid.Row="2"
+                       Text="项目颜色："
+                       FontSize="15"
+                       VerticalAlignment="Center"
+                       FontFamily="Microsoft YaHei UI, SimHei, sans-serif"
+                       Margin="0,0,0,10"/>
+            <ComboBox Grid.Row="3"
+                      SelectedItem="{Binding ProjectColor}"
+                      HorizontalAlignment="Stretch"
+                      FontSize="15"
+                      FontFamily="Microsoft YaHei UI, SimHei, sans-serif"
+                      Margin="0,0,0,25">
+                <ComboBox.Items>
+                    <x:String>#F44336</x:String>
+                    <x:String>#E91E63</x:String>
+                    <x:String>#9C27B0</x:String>
+                    <x:String>#2196F3</x:String>
+                    <x:String>#00BCD4</x:String>
+                    <x:String>#4CAF50</x:String>
+                    <x:String>#FF9800</x:String>
+                    <x:String>#795548</x:String>
+                </ComboBox.Items>
+            </ComboBox>
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="4"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="10">
+                <Button Content="取消"
+                        Command="{Binding CancelCommand}"
+                        Width="90"
+                        Height="35"
+                        FontSize="14"/>
+                <Button Content="保存"
+                        Command="{Binding SaveCommand}"
+                        Classes="Primary"
+                        Width="90"
+                        Height="35"
+                        FontSize="14"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,61 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- General -->
+    <x:String x:Key="AppTitle">GKQuandrant</x:String>
+    <x:String x:Key="AppSubtitle">四象限任务管理</x:String>
+    
+    <!-- Actions -->
+    <x:String x:Key="AddTask">+ 添加任务</x:String>
+    <x:String x:Key="ProjectManagement">项目管理</x:String>
+    <x:String x:Key="SwitchLanguage">语言切换</x:String>
+    
+    <!-- Quadrants -->
+    <x:String x:Key="Q1Title">Q1: 重要且紧急</x:String>
+    <x:String x:Key="Q1Subtitle">立即处理 (Do First)</x:String>
+    <x:String x:Key="Q2Title">Q2: 重要不紧急</x:String>
+    <x:String x:Key="Q2Subtitle">计划安排 (Schedule)</x:String>
+    <x:String x:Key="Q3Title">Q3: 不重要但紧急</x:String>
+    <x:String x:Key="Q3Subtitle">委托处理 (Delegate)</x:String>
+    <x:String x:Key="Q4Title">Q4: 不重要不紧急</x:String>
+    <x:String x:Key="Q4Subtitle">消除或最后 (Eliminate)</x:String>
+    
+    <!-- Sidebar -->
+    <x:String x:Key="ProjectFilter">项目筛选</x:String>
+    <x:String x:Key="AllProjects">全部</x:String>
+    
+    <!-- Task View -->
+    <x:String x:Key="CompletedTasks">已完成任务</x:String>
+    <x:String x:Key="ArchiveSubtitle">归档的完成任务</x:String>
+    <x:String x:Key="Restore">恢复</x:String>
+    <x:String x:Key="Delete">删除</x:String>
+    <x:String x:Key="Edit">编辑</x:String>
+    <x:String x:Key="Complete">完成</x:String>
+    <x:String x:Key="CompletedAt">完成时间: {0:yyyy-MM-dd HH:mm}</x:String>
+    
+    <!-- Dialogs -->
+    <x:String x:Key="TaskContent">任务内容</x:String>
+    <x:String x:Key="SelectQuadrant">选择象限</x:String>
+    <x:String x:Key="SelectProject">所属项目</x:String>
+    <x:String x:Key="Priority">优先级</x:String>
+    <x:String x:Key="DueDate">截止日期</x:String>
+    <x:String x:Key="Description">备注</x:String>
+    <x:String x:Key="Cancel">取消</x:String>
+    <x:String x:Key="Save">保存</x:String>
+    <x:String x:Key="EnterTaskTitle">请输入任务内容...</x:String>
+    <x:String x:Key="EnterTaskDescription">可选：添加任务备注...</x:String>
+    <x:String x:Key="NewTask">新建任务</x:String>
+    <x:String x:Key="EditTask">编辑任务</x:String>
+    <x:String x:Key="NoProject">无项目</x:String>
+    <x:String x:Key="PriorityLow">低</x:String>
+    <x:String x:Key="PriorityMedium">中</x:String>
+    <x:String x:Key="PriorityHigh">高</x:String>
+    
+    <!-- Project Management -->
+    <x:String x:Key="ProjectManagementTitle">项目管理</x:String>
+    <x:String x:Key="AddNewProject">添加新项目</x:String>
+    <x:String x:Key="ProjectName">项目名称</x:String>
+    <x:String x:Key="SelectColor">选择颜色</x:String>
+    <x:String x:Key="AddProject">添加项目</x:String>
+    <x:String x:Key="Close">关闭</x:String>
+    <x:String x:Key="ProjectCreatedAt">创建于 {0:yyyy-MM-dd}</x:String>
+</ResourceDictionary>
