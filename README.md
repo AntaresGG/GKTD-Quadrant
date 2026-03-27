@@ -1,6 +1,12 @@
 # QuadrantGTD
 
-> 基于艾森豪威尔矩阵的四象限 GTD 任务管理工具，采用 Avalonia UI 构建，支持 Windows 原生运行。
+**Language / 语言 / 言語 / Sprache / Langue**
+
+[English](README.md) | [中文](README.zh.md) | [日本語](README.ja.md) | [Deutsch](README.de.md) | [Français](README.fr.md)
+
+---
+
+> A four-quadrant GTD task management tool based on the Eisenhower Matrix, built with Avalonia UI for Windows.
 
 ![Version](https://img.shields.io/badge/version-1.2.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-lightgrey)
@@ -9,117 +15,113 @@
 
 ---
 
-## 功能特性
+## Features
 
-### 四象限分类（艾森豪威尔矩阵）
+### Four-Quadrant Classification (Eisenhower Matrix)
 
-| 象限 | 描述 | 行动策略 |
-|------|------|----------|
-| **Q1** 重要且紧急 | 危机、截止日期、突发事件 | 立即处理 |
-| **Q2** 重要不紧急 | 规划、学习、关系维护 | 安排时间 |
-| **Q3** 不重要但紧急 | 部分会议、电话、邮件 | 委托他人 |
-| **Q4** 不重要不紧急 | 娱乐、无效社交 | 消除或推后 |
+| Quadrant | Description | Strategy |
+|----------|-------------|----------|
+| **Q1** Important & Urgent | Crises, deadlines, emergencies | Do first |
+| **Q2** Important, Not Urgent | Planning, learning, relationship building | Schedule |
+| **Q3** Not Important, Urgent | Some meetings, calls, emails | Delegate |
+| **Q4** Not Important, Not Urgent | Trivial tasks, time wasters | Eliminate |
 
-### 核心功能
+### Core Features
 
-- 任务拖拽跨象限移动
-- 项目维度分类管理（v1.2.0 新增）
-- 按项目筛选任务视图
-- 任务编辑 / 完成 / 删除操作
-- 本地 JSON 数据持久化，自动保存
-- 自动迁移历史数据格式
-- Material Design 现代界面风格
+- Drag & drop tasks across quadrants
+- Project-based task organization (new in v1.2.0)
+- Filter tasks by project
+- Task edit / complete / delete
+- Local JSON persistence with auto-save
+- Automatic data format migration
+- Material Design interface
 
 ---
 
-## 快速开始
+## Quick Start
 
-### 系统要求
+### Requirements
 
 - Windows 10 / 11 x64
-- 无需安装运行时（自包含发布）
-- 磁盘空间：约 100 MB
+- No runtime installation needed (self-contained)
+- Disk space: ~100 MB
 
-### 安装
+### Installation
 
-1. 前往 [Releases](https://github.com/AntaresGG/GKTD-Quadrant/releases) 下载最新版 `QuadrantGTD.exe`
-2. 双击直接运行，无需安装
-3. 数据自动保存至 `%APPDATA%\QuadrantGTD\`
+1. Go to [Releases](https://github.com/AntaresGG/GKTD-Quadrant/releases) and download `QuadrantGTD.exe`
+2. Run directly — no installation required
+3. Data is saved automatically to `%APPDATA%\QuadrantGTD\`
 
-### 基本操作
+### Basic Usage
 
-1. **添加任务** — 点击顶部"添加任务"按钮，填写标题后确认
-2. **移动任务** — 拖拽任务卡片到目标象限
-3. **编辑任务** — 点击卡片上的编辑按钮
-4. **完成任务** — 点击 ✓ 按钮标记完成
-5. **删除任务** — 点击 ✗ 按钮删除
-6. **项目管理** — 顶部菜单创建项目，按项目筛选任务
-
----
-
-## 技术栈
-
-| 组件 | 版本 |
-|------|------|
-| 语言 | C# 12 |
-| 运行时 | .NET 8.0 LTS |
-| UI 框架 | Avalonia UI 11.3 |
-| UI 主题 | Material.Avalonia 3.8 |
-| 架构模式 | MVVM (CommunityToolkit.Mvvm 8.2) |
-| 依赖注入 | Microsoft.Extensions.DependencyInjection 9.0 |
-| 数据格式 | JSON (System.Text.Json) |
+1. **Add task** — Click "Add Task" at the top, fill in the title
+2. **Move task** — Drag a task card to the target quadrant
+3. **Edit task** — Click the edit button on the card
+4. **Complete task** — Click ✓ to mark as done
+5. **Delete task** — Click ✗ to remove
+6. **Manage projects** — Create projects from the top menu and filter tasks
 
 ---
 
-## 项目结构
+## Tech Stack
+
+| Component | Version |
+|-----------|---------|
+| Language | C# 12 |
+| Runtime | .NET 8.0 LTS |
+| UI Framework | Avalonia UI 11.3 |
+| UI Theme | Material.Avalonia 3.8 |
+| Architecture | MVVM (CommunityToolkit.Mvvm 8.2) |
+| DI Container | Microsoft.Extensions.DependencyInjection 9.0 |
+| Data Format | JSON (System.Text.Json) |
+
+---
+
+## Project Structure
 
 ```
 src/
 ├── QuadrantGTD/
-│   ├── Models/          # 数据模型 (TaskItem, Project, AppData)
-│   ├── ViewModels/      # MVVM 视图模型
-│   ├── Views/           # Avalonia XAML 视图与对话框
-│   ├── Services/        # 业务逻辑与数据访问层
-│   ├── Behaviors/       # 拖拽行为
-│   └── Assets/          # 图标与多语言资源
-└── QuadrantGTD.Tests/   # xUnit 单元测试
+│   ├── Models/          # Data models (TaskItem, Project, AppData)
+│   ├── ViewModels/      # MVVM view models
+│   ├── Views/           # Avalonia XAML views and dialogs
+│   ├── Services/        # Business logic and data access
+│   ├── Behaviors/       # Drag-drop behavior
+│   └── Assets/          # Icons and localization resources
+└── QuadrantGTD.Tests/   # xUnit unit tests
 ```
 
 ---
 
-## 本地开发
+## Local Development
 
-**前置要求：** .NET 8.0 SDK
+**Prerequisites:** .NET 8.0 SDK
 
 ```bash
-# 克隆项目
 git clone https://github.com/AntaresGG/GKTD-Quadrant.git
 cd GKTD-Quadrant
 
-# 还原依赖
 dotnet restore
-
-# 运行应用
 dotnet run --project src/QuadrantGTD
 
-# 运行测试
+# Run tests
 dotnet test
 
-# 发布 Windows x64 单文件
+# Publish Windows x64 single-file
 dotnet publish src/QuadrantGTD -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
 ```
 
 ---
 
-## 版本历史
+## Release History
 
-| 版本 | 日期 | 主要变更 |
-|------|------|----------|
-| [v1.2.0](https://github.com/AntaresGG/GKTD-Quadrant/releases/tag/v1.2.0) | 2026-03-27 | 项目管理功能、按钮交互优化、数据格式升级 |
-| v1.1.0 | — | 拖拽功能、基础任务 CRUD |
-| v1.0.0 | — | 初始版本，四象限布局 |
+| Version | Date | Changes |
+|---------|------|---------|
+| [v1.2.0](https://github.com/AntaresGG/GKTD-Quadrant/releases/tag/v1.2.0) | 2026-03-27 | Project management, button UX improvements, data format upgrade |
+| v1.1.0 | — | Drag-drop, basic task CRUD |
+| v1.0.0 | — | Initial release, four-quadrant layout |
 
-详细变更记录见 [RELEASE_NOTES.md](RELEASE_NOTES.md)
+See [RELEASE_NOTES.md](RELEASE_NOTES.md) for full changelog.
 
 ---
 
