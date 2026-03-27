@@ -54,24 +54,6 @@ public partial class App : Application
 
         // Register ViewModels
         services.AddTransient<MainWindowViewModel>();
-
-        // Initialize TaskService
-        services.AddSingleton<TaskService>(provider =>
-        {
-            var dataService = provider.GetRequiredService<IDataService>();
-            var taskService = new TaskService(dataService);
-            taskService.InitializeAsync().Wait();
-            return taskService;
-        });
-
-        // Initialize ProjectService
-        services.AddSingleton<ProjectService>(provider =>
-        {
-            var dataService = provider.GetRequiredService<IDataService>();
-            var projectService = new ProjectService(dataService);
-            projectService.InitializeAsync().Wait();
-            return projectService;
-        });
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

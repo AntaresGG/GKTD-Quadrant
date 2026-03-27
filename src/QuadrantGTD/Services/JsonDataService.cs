@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using QuadrantGTD.Models;
@@ -29,26 +30,63 @@ public class JsonDataService : IDataService
         };
     }
 
-    public async Task<IEnumerable<TaskItem>> LoadTasksAsync()
+    public async Task<AppData> LoadDataAsync()
     {
         try
         {
             if (!File.Exists(_dataFilePath))
             {
-                return new List<TaskItem>();
+                return new AppData();
             }
 
             var json = await File.ReadAllTextAsync(_dataFilePath);
-            var tasks = JsonSerializer.Deserialize<List<TaskItem>>(json, _jsonOptions);
-            return tasks ?? new List<TaskItem>();
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return new AppData();
+            }
+
+            // 检查 JSON 是数组还是对象
+            var trimmedJson = json.Trim();
+            if (trimmedJson.StartsWith("["))
+            {
+                // 旧格式：任务列表数组
+                try
+                {
+                    var tasks = JsonSerializer.Deserialize<List<TaskItem>>(json, _jsonOptions);
+                    var data = new AppData { Tasks = tasks ?? new List<TaskItem>() };
+                    // 立即保存为新格式
+                    await SaveDataAsync(data);
+                    return data;
+                }
+                catch
+                {
+                    return new AppData();
+                }
+            }
+            else if (trimmedJson.StartsWith("{"))
+            {
+                // 新格式：AppData 对象
+                try
+                {
+                    var data = JsonSerializer.Deserialize<AppData>(json, _jsonOptions);
+                    return data ?? new AppData();
+                }
+                catch
+                {
+                    // 如果解析失败，尝试回退到旧格式处理（防万一）
+                    return new AppData();
+                }
+            }
+
+            return new AppData();
         }
         catch (Exception)
         {
-            return new List<TaskItem>();
+            return new AppData();
         }
     }
 
-    public async Task<bool> SaveTasksAsync(IEnumerable<TaskItem> tasks)
+    public async Task<bool> SaveDataAsync(AppData data)
     {
         try
         {
@@ -57,7 +95,7 @@ public class JsonDataService : IDataService
                 Directory.CreateDirectory(_dataDirectory);
             }
 
-            var json = JsonSerializer.Serialize(tasks, _jsonOptions);
+            var json = JsonSerializer.Serialize(data, _jsonOptions);
             await File.WriteAllTextAsync(_dataFilePath, json);
             return true;
         }
@@ -65,6 +103,19 @@ public class JsonDataService : IDataService
         {
             return false;
         }
+    }
+
+    public async Task<IEnumerable<TaskItem>> LoadTasksAsync()
+    {
+        var data = await LoadDataAsync();
+        return data.Tasks;
+    }
+
+    public async Task<bool> SaveTasksAsync(IEnumerable<TaskItem> tasks)
+    {
+        var data = await LoadDataAsync();
+        data.Tasks = tasks.ToList();
+        return await SaveDataAsync(data);
     }
 
     public async Task<bool> ExportTasksAsync(string filePath, IEnumerable<TaskItem> tasks)
@@ -97,87 +148,6 @@ public class JsonDataService : IDataService
         catch (Exception)
         {
             return new List<TaskItem>();
-        }
-    }
-
-    // 新增：支持统一数据模型
-    public async Task<AppData> LoadDataAsync()
-    {
-        try
-        {
-            // 尝试加载新格式
-            if (File.Exists(_dataFilePath))
-            {
-                var json = await File.ReadAllTextAsync(_dataFilePath);
-
-                // 尝试解析为新格式 AppData
-                try
-                {
-                    var data = JsonSerializer.Deserialize<AppData>(json, _jsonOptions);
-                    if (data != null)
-                    {
-                        return data;
-                    }
-                }
-                catch
-                {
-                    // 如果解析失败，可能是旧格式，继续迁移逻辑
-                }
-            }
-
-            // 迁移旧格式（纯任务列表）
-            var oldFilePath = Path.Combine(_dataDirectory, "tasks.json.old");
-            if (File.Exists(_dataFilePath) && !File.Exists(oldFilePath))
-            {
-                try
-                {
-                    var oldJson = await File.ReadAllTextAsync(_dataFilePath);
-                    var oldTasks = JsonSerializer.Deserialize<List<TaskItem>>(oldJson, _jsonOptions);
-
-                    var migratedData = new AppData
-                    {
-                        Tasks = oldTasks ?? new List<TaskItem>(),
-                        Projects = new List<Project>()
-                    };
-
-                    // 保存新格式
-                    await SaveDataAsync(migratedData);
-
-                    // 备份旧文件
-                    File.Move(_dataFilePath, oldFilePath);
-
-                    return migratedData;
-                }
-                catch
-                {
-                    // 迁移失败，返回空数据
-                }
-            }
-
-            return new AppData();
-        }
-        catch (Exception)
-        {
-            return new AppData();
-        }
-    }
-
-    public async Task<bool> SaveDataAsync(AppData data)
-    {
-        try
-        {
-            if (!Directory.Exists(_dataDirectory))
-            {
-                Directory.CreateDirectory(_dataDirectory);
-            }
-
-            var json = JsonSerializer.Serialize(data, _jsonOptions);
-            await File.WriteAllTextAsync(_dataFilePath, json);
-            return true;
-        }
-        catch (Exception)
-        {
-            return false;
         }
     }
 }

@@ -17,7 +17,7 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly ITaskService _taskService;
     private readonly IDataService _dataService;
-    private readonly IProjectService? _projectService;
+    private readonly IProjectService _projectService;
 
     [ObservableProperty]
     private ObservableCollection<TaskItem> q1Tasks = new();
@@ -73,7 +73,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(ToggleLanguageButtonText));
     }
 
-    public MainWindowViewModel(ITaskService taskService, IDataService dataService, IProjectService? projectService = null)
+    public MainWindowViewModel(ITaskService taskService, IDataService dataService, IProjectService projectService)
     {
         _taskService = taskService;
         _dataService = dataService;
@@ -82,18 +82,31 @@ public partial class MainWindowViewModel : ViewModelBase
         InitializeAsync();
     }
 
-    public MainWindowViewModel() : this(new TaskService(new JsonDataService()), new JsonDataService(), null)
+    public MainWindowViewModel() : this(new TaskService(new JsonDataService()), new JsonDataService(), new ProjectService(new JsonDataService()))
     {
     }
 
     private async void InitializeAsync()
     {
-        await LoadTasksAsync();
-        
-        // Add some sample tasks for demonstration
-        if (!Q1Tasks.Any() && !Q2Tasks.Any() && !Q3Tasks.Any() && !Q4Tasks.Any())
+        IsLoading = true;
+        try
         {
-            await AddSampleTasksAsync();
+            // 初始化服务
+            if (_taskService is TaskService ts) await ts.InitializeAsync();
+            if (_projectService is ProjectService ps) await ps.InitializeAsync();
+
+            await LoadProjectsAsync();
+            await LoadTasksAsync();
+            
+            // 只有当既没有任务也没有项目时，才添加样本数据
+            if (!Q1Tasks.Any() && !Q2Tasks.Any() && !Q3Tasks.Any() && !Q4Tasks.Any() && !CompletedTasks.Any() && !Projects.Any())
+            {
+                await AddSampleTasksAsync();
+            }
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 

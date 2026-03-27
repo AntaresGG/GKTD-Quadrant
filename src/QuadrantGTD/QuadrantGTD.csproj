@@ -13,9 +13,9 @@
     <AssemblyDescription>四象限GTD任务管理工具</AssemblyDescription>
     <AssemblyCompany>QuadrantGTD</AssemblyCompany>
     <AssemblyProduct>QuadrantGTD</AssemblyProduct>
-    <AssemblyCopyright>Copyright © 2024</AssemblyCopyright>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyCopyright>Copyright © 2026</AssemblyCopyright>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
