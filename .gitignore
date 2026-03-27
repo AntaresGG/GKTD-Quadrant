@@ -1,5 +1,7 @@
-# Markdown files
+# Markdown files (keep README.md and RELEASE_NOTES.md)
 *.md
+!README.md
+!RELEASE_NOTES.md
 
 # .NET build outputs
 bin/
