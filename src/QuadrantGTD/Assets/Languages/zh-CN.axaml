@@ -8,6 +8,9 @@
     <x:String x:Key="AddTask">+ 添加任务</x:String>
     <x:String x:Key="ProjectManagement">项目管理</x:String>
     <x:String x:Key="SwitchLanguage">语言切换</x:String>
+    <x:String x:Key="ProjectBoard">项目看板</x:String>
+    <x:String x:Key="QuadrantView">四象限视图</x:String>
+    <x:String x:Key="Uncategorized">未分类</x:String>
     
     <!-- Quadrants -->
     <x:String x:Key="Q1Title">Q1: 重要且紧急</x:String>

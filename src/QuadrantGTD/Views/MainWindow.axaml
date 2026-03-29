@@ -72,11 +72,11 @@
                     Background="White"
                     BorderBrush="#E2E8F0"
                     BorderThickness="0,0,1,0"
-                    IsVisible="{Binding !ShowCompletedView}">
+                    IsVisible="{Binding IsQuadrantView}">
                 <ScrollViewer>
                     <Border Padding="16,24">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="PROJECT FILTER"
+                            <TextBlock Text="{DynamicResource ProjectFilter}"
                                        FontSize="12"
                                        FontWeight="Bold"
                                        Foreground="#94A3B8"
@@ -115,9 +115,10 @@
                 </ScrollViewer>
             </Border>
 
-            <!-- Main Content -->
-            <Grid Grid.Column="1" IsVisible="{Binding !ShowCompletedView}">
+            <!-- Main Content: Quadrant View -->
+            <Grid Grid.Column="1" IsVisible="{Binding IsQuadrantView}">
                 <Grid RowDefinitions="*, *" ColumnDefinitions="*, *" Margin="24">
+                    <!-- Q1, Q2, Q3, Q4 same as before... -->
                     
                     <!-- Q1: Urgent & Important -->
                     <Border Grid.Row="0" Grid.Column="0" Background="#FFF1F2" BorderBrush="#FDA4AF" BorderThickness="1" CornerRadius="16" Margin="0,0,10,10">
@@ -214,8 +215,66 @@
                 </Grid>
             </Grid>
 
+            <!-- Main Content: Project Board View -->
+            <Grid Grid.Column="1" IsVisible="{Binding IsProjectBoardView}" Margin="16">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding ProjectColumns}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="12"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ProjectColumn">
+                                <Border Width="180" Background="#F1F5F9" CornerRadius="12" BorderBrush="#E2E8F0" BorderThickness="1">
+                                    <DockPanel>
+                                        <!-- Column Header -->
+                                        <Border DockPanel.Dock="Top" Padding="12,8" Background="White" CornerRadius="12,12,0,0" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                                <Ellipse Grid.Column="0" Width="10" Height="10" Fill="{Binding Color}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                <Border Grid.Column="2" Background="#E2E8F0" CornerRadius="8" Padding="6,1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Tasks.Count}" FontSize="10" FontWeight="Bold" Foreground="#64748B"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Column Tasks -->
+                                        <ScrollViewer Padding="8">
+                                            <ItemsControl ItemsSource="{Binding Tasks}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:TaskItem">
+                                                        <Border Classes="TaskCard" Padding="10" Margin="0,0,0,8">
+                                                            <Grid RowDefinitions="Auto, Auto">
+                                                                <TextBlock Grid.Row="0" Text="{Binding Title}" TextWrapping="Wrap" FontSize="12" FontWeight="Medium" Foreground="#1E293B" Margin="0,0,0,6"/>
+                                                                
+                                                                <!-- Actions and Compact Badge -->
+                                                                <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
+                                                                    <Border Grid.Column="0" HorizontalAlignment="Left" CornerRadius="3" Padding="4,1" Background="#E2E8F0" Opacity="0.6">
+                                                                        <TextBlock Text="{Binding Quadrant}" FontSize="8" FontWeight="Bold" Foreground="#64748B"/>
+                                                                    </Border>
+                                                                    
+                                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2">
+                                                                        <Button Content="✏️" Classes="IconButton" Command="{Binding $parent[Window].DataContext.EditTaskCommand}" CommandParameter="{Binding}" Padding="2" FontSize="9"/>
+                                                                        <Button Content="✔️" Classes="IconButton" Command="{Binding $parent[Window].DataContext.CompleteTaskCommand}" CommandParameter="{Binding}" Padding="2" FontSize="9"/>
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+
             <!-- Completed View -->
-            <Grid Grid.Column="1" IsVisible="{Binding ShowCompletedView}" Margin="24">
+            <Grid Grid.Column="1" IsVisible="{Binding IsCompletedView}" Margin="24">
                 <Border Background="White" CornerRadius="20" BoxShadow="0 4 6 -1 #0D000000, 0 2 4 -2 #0D000000">
                     <DockPanel>
                         <Border DockPanel.Dock="Top" Padding="24,20" Background="#F1F5F9" CornerRadius="20,20,0,0">

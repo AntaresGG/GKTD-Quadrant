@@ -8,6 +8,9 @@
     <x:String x:Key="AddTask">+ Add Task</x:String>
     <x:String x:Key="ProjectManagement">Projects</x:String>
     <x:String x:Key="SwitchLanguage">Language</x:String>
+    <x:String x:Key="ProjectBoard">Project Board</x:String>
+    <x:String x:Key="QuadrantView">Quadrant View</x:String>
+    <x:String x:Key="Uncategorized">Uncategorized</x:String>
     
     <!-- Quadrants -->
     <x:String x:Key="Q1Title">Q1: Urgent &amp; Important</x:String>

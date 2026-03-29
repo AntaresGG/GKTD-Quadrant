@@ -13,11 +13,42 @@ using Avalonia.Controls;
 
 namespace QuadrantGTD.ViewModels;
 
+public enum ViewMode
+{
+    Quadrant,
+    ProjectBoard,
+    Completed
+}
+
+public partial class ProjectColumn : ObservableObject
+{
+    [ObservableProperty]
+    private string name = string.Empty;
+
+    [ObservableProperty]
+    private string color = "#2196F3";
+
+    [ObservableProperty]
+    private string? projectId;
+
+    public ObservableCollection<TaskItem> Tasks { get; } = new();
+
+    public ProjectColumn(string name, string color, string? projectId = null)
+    {
+        Name = name;
+        Color = color;
+        ProjectId = projectId;
+    }
+}
+
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly ITaskService _taskService;
     private readonly IDataService _dataService;
     private readonly IProjectService _projectService;
+
+    [ObservableProperty]
+    private ViewMode _currentViewMode = ViewMode.Quadrant;
 
     [ObservableProperty]
     private ObservableCollection<TaskItem> q1Tasks = new();
@@ -35,13 +66,16 @@ public partial class MainWindowViewModel : ViewModelBase
     private ObservableCollection<TaskItem> completedTasks = new();
 
     [ObservableProperty]
+    private ObservableCollection<ProjectColumn> projectColumns = new();
+
+    [ObservableProperty]
     private TaskItem? selectedTask;
 
     [ObservableProperty]
     private bool isLoading;
 
     [ObservableProperty]
-    private bool showCompletedView;
+    private bool showCompletedView; // 保留此属性以维持向后兼容，或者稍后重构
 
     // 项目管理相关属性
     [ObservableProperty]
@@ -58,9 +92,24 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public bool HasProjects => Projects.Count > 0;
 
-    public string ToggleButtonText => ShowCompletedView 
-        ? (LocalizationManager.Instance.CurrentLanguage == "zh-CN" ? "查看四象限" : "Show Quadrants") 
-        : (LocalizationManager.Instance.CurrentLanguage == "zh-CN" ? "查看已完成" : "Show Completed");
+    public string ToggleButtonText
+    {
+        get
+        {
+            var lang = LocalizationManager.Instance.CurrentLanguage;
+            return CurrentViewMode switch
+            {
+                ViewMode.Quadrant => lang == "zh-CN" ? "查看项目看板" : "Show Project Board",
+                ViewMode.ProjectBoard => lang == "zh-CN" ? "查看已完成" : "Show Completed",
+                ViewMode.Completed => lang == "zh-CN" ? "查看四象限" : "Show Quadrants",
+                _ => "Toggle View"
+            };
+        }
+    }
+
+    public bool IsQuadrantView => CurrentViewMode == ViewMode.Quadrant;
+    public bool IsProjectBoardView => CurrentViewMode == ViewMode.ProjectBoard;
+    public bool IsCompletedView => CurrentViewMode == ViewMode.Completed;
 
     public string ToggleLanguageButtonText => LocalizationManager.Instance.CurrentLanguage == "zh-CN" ? "EN" : "中文";
 
@@ -118,15 +167,16 @@ public partial class MainWindowViewModel : ViewModelBase
             var allTasks = await _taskService.GetAllTasksAsync();
 
             // 应用项目筛选
-            var filteredTasks = SelectedProjectIds.Count == 0
+            var filteredTasks = (SelectedProjectIds.Count == 0
                 ? allTasks
-                : allTasks.Where(t => string.IsNullOrEmpty(t.ProjectId) || SelectedProjectIds.Contains(t.ProjectId));
+                : allTasks.Where(t => string.IsNullOrEmpty(t.ProjectId) || SelectedProjectIds.Contains(t.ProjectId))).ToList();
 
             Q1Tasks.Clear();
             Q2Tasks.Clear();
             Q3Tasks.Clear();
             Q4Tasks.Clear();
             CompletedTasks.Clear();
+            ProjectColumns.Clear();
 
             foreach (var task in filteredTasks)
             {
@@ -138,20 +188,36 @@ public partial class MainWindowViewModel : ViewModelBase
                 {
                     switch (task.Quadrant)
                     {
-                        case Quadrant.UrgentImportant:
-                            Q1Tasks.Add(task);
-                            break;
-                        case Quadrant.NotUrgentImportant:
-                            Q2Tasks.Add(task);
-                            break;
-                        case Quadrant.UrgentNotImportant:
-                            Q3Tasks.Add(task);
-                            break;
-                        case Quadrant.NotUrgentNotImportant:
-                            Q4Tasks.Add(task);
-                            break;
+                        case Quadrant.UrgentImportant: Q1Tasks.Add(task); break;
+                        case Quadrant.NotUrgentImportant: Q2Tasks.Add(task); break;
+                        case Quadrant.UrgentNotImportant: Q3Tasks.Add(task); break;
+                        case Quadrant.NotUrgentNotImportant: Q4Tasks.Add(task); break;
                     }
                 }
+            }
+
+            // 填充项目看板列
+            var uncompletedTasks = filteredTasks.Where(t => !t.IsCompleted).ToList();
+            
+            // 1. 创建"未分类"列 (如果存在未分类任务或已有项目)
+            var uncategorizedTasks = uncompletedTasks.Where(t => string.IsNullOrEmpty(t.ProjectId)).ToList();
+            if (uncategorizedTasks.Any() || Projects.Count > 0)
+            {
+                var uncategorizedColumn = new ProjectColumn(
+                    LocalizationManager.Instance.CurrentLanguage == "zh-CN" ? "未分类" : "Uncategorized", 
+                    "#94A3B8", 
+                    null);
+                foreach (var task in uncategorizedTasks) uncategorizedColumn.Tasks.Add(task);
+                ProjectColumns.Add(uncategorizedColumn);
+            }
+
+            // 2. 为每个项目创建列
+            foreach (var project in Projects)
+            {
+                var projectColumn = new ProjectColumn(project.Name, project.Color, project.Id);
+                var projectTasks = uncompletedTasks.Where(t => t.ProjectId == project.Id).ToList();
+                foreach (var task in projectTasks) projectColumn.Tasks.Add(task);
+                ProjectColumns.Add(projectColumn);
             }
         }
         finally
@@ -267,8 +333,24 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void ToggleView()
     {
-        ShowCompletedView = !ShowCompletedView;
+        CurrentViewMode = CurrentViewMode switch
+        {
+            ViewMode.Quadrant => ViewMode.ProjectBoard,
+            ViewMode.ProjectBoard => ViewMode.Completed,
+            ViewMode.Completed => ViewMode.Quadrant,
+            _ => ViewMode.Quadrant
+        };
+
+        // 同步旧的布尔值以保持兼容性
+        ShowCompletedView = IsCompletedView;
+
         OnPropertyChanged(nameof(ToggleButtonText));
+        OnPropertyChanged(nameof(IsQuadrantView));
+        OnPropertyChanged(nameof(IsProjectBoardView));
+        OnPropertyChanged(nameof(IsCompletedView));
+        
+        // 重新加载以确保看板数据是最新的
+        _ = LoadTasksAsync();
     }
 
     [RelayCommand]
