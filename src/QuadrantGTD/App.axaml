@@ -90,6 +90,18 @@
             <Setter Property="Foreground" Value="White"/>
         </Style>
 
+        <Style Selector="Button.ViewSwitchButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,10"/>
+        </Style>
+
+        <Style Selector="Button.ViewSwitchButton.Selected">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+
         <!-- Task Card Style Upgrade -->
         <Style Selector="Border.TaskCard">
             <Setter Property="Background" Value="White"/>
@@ -160,9 +172,17 @@
         <Style Selector="Button.ProjectFilterButton">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#334155"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Margin" Value="0,2"/>
             <Setter Property="Padding" Value="12,10"/>
+        </Style>
+
+        <Style Selector="Button.ProjectFilterButton.Selected">
+            <Setter Property="Background" Value="#E0E7FF"/>
+            <Setter Property="Foreground" Value="#312E81"/>
+            <Setter Property="BorderBrush" Value="#818CF8"/>
         </Style>
         
         <Style Selector="Button.ProjectFilterButton:pointerover /template/ ContentPresenter">

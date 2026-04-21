@@ -28,12 +28,16 @@
     
     <!-- Task View -->
     <x:String x:Key="CompletedTasks">Completed Tasks</x:String>
+    <x:String x:Key="DeletedTasks">Deleted Tasks</x:String>
     <x:String x:Key="ArchiveSubtitle">Archived tasks</x:String>
+    <x:String x:Key="DeletedSubtitle">Archived deleted tasks</x:String>
     <x:String x:Key="Restore">Restore</x:String>
     <x:String x:Key="Delete">Delete</x:String>
+    <x:String x:Key="DeletePermanently">Delete Permanently</x:String>
     <x:String x:Key="Edit">Edit</x:String>
     <x:String x:Key="Complete">Complete</x:String>
-    <x:String x:Key="CompletedAt">Completed At: {0:yyyy-MM-dd HH:mm}</x:String>
+    <x:String x:Key="CompletedAt">Completed At:</x:String>
+    <x:String x:Key="DeletedAt">Deleted At:</x:String>
     
     <!-- Dialogs -->
     <x:String x:Key="TaskContent">Task Content</x:String>

@@ -28,12 +28,16 @@
     
     <!-- Task View -->
     <x:String x:Key="CompletedTasks">已完成任务</x:String>
+    <x:String x:Key="DeletedTasks">已删除任务</x:String>
     <x:String x:Key="ArchiveSubtitle">归档的完成任务</x:String>
+    <x:String x:Key="DeletedSubtitle">归档的已删除任务</x:String>
     <x:String x:Key="Restore">恢复</x:String>
     <x:String x:Key="Delete">删除</x:String>
+    <x:String x:Key="DeletePermanently">彻底删除</x:String>
     <x:String x:Key="Edit">编辑</x:String>
     <x:String x:Key="Complete">完成</x:String>
-    <x:String x:Key="CompletedAt">完成时间: {0:yyyy-MM-dd HH:mm}</x:String>
+    <x:String x:Key="CompletedAt">完成时间:</x:String>
+    <x:String x:Key="DeletedAt">删除时间:</x:String>
     
     <!-- Dialogs -->
     <x:String x:Key="TaskContent">任务内容</x:String>

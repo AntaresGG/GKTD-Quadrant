@@ -24,10 +24,16 @@ public partial class TaskItem : ObservableObject
     private bool isCompleted = false;
 
     [ObservableProperty]
+    private bool isDeleted = false;
+
+    [ObservableProperty]
     private DateTime createdAt = DateTime.Now;
 
     [ObservableProperty]
     private DateTime? completedAt;
+
+    [ObservableProperty]
+    private DateTime? deletedAt;
 
     [ObservableProperty]
     private DateTime? dueDate;

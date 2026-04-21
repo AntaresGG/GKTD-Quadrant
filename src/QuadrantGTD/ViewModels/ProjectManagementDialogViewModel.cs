@@ -69,10 +69,11 @@ public partial class ProjectManagementDialogViewModel : ViewModelBase
         var dialog = new ProjectEditDialogViewModel(_projectService, project);
         dialog.InitializeForEdit(project);
 
-        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            && desktop.MainWindow is Avalonia.Controls.Window mainWindow)
         {
             var window = new ProjectEditDialog(dialog);
-            await window.ShowDialog(desktop.MainWindow);
+            await window.ShowDialog(mainWindow);
 
             // 刷新列表
             await LoadProjectsAsync();

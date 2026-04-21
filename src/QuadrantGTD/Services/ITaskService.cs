@@ -11,6 +11,7 @@ public interface ITaskService
     Task<TaskItem> CreateTaskAsync(TaskItem task);
     Task<TaskItem> UpdateTaskAsync(TaskItem task);
     Task<bool> DeleteTaskAsync(string id);
+    Task<bool> PermanentlyDeleteTaskAsync(string id);
     Task<IEnumerable<TaskItem>> GetTasksByQuadrantAsync(Quadrant quadrant);
     Task<bool> MoveTaskToQuadrantAsync(string taskId, Quadrant newQuadrant);
     Task<bool> CompleteTaskAsync(string taskId);

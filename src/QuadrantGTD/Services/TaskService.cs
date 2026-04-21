@@ -67,6 +67,19 @@ public class TaskService : ITaskService
         var task = _tasks.FirstOrDefault(t => t.Id == id);
         if (task != null)
         {
+            task.IsDeleted = true;
+            task.DeletedAt = DateTime.Now;
+            await _dataService.SaveTasksAsync(_tasks);
+            return true;
+        }
+        return false;
+    }
+
+    public async Task<bool> PermanentlyDeleteTaskAsync(string id)
+    {
+        var task = _tasks.FirstOrDefault(t => t.Id == id);
+        if (task != null)
+        {
             _tasks.Remove(task);
             await _dataService.SaveTasksAsync(_tasks);
             return true;
@@ -94,7 +107,7 @@ public class TaskService : ITaskService
     public async Task<bool> CompleteTaskAsync(string taskId)
     {
         var task = _tasks.FirstOrDefault(t => t.Id == taskId);
-        if (task != null)
+        if (task != null && !task.IsDeleted)
         {
             task.IsCompleted = true;
             task.CompletedAt = DateTime.Now;

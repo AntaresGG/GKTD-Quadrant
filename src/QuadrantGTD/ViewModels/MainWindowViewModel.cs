@@ -17,7 +17,13 @@ public enum ViewMode
 {
     Quadrant,
     ProjectBoard,
-    Completed
+    Archive
+}
+
+public enum ArchiveViewMode
+{
+    Completed,
+    Deleted
 }
 
 public partial class ProjectColumn : ObservableObject
@@ -46,6 +52,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ITaskService _taskService;
     private readonly IDataService _dataService;
     private readonly IProjectService _projectService;
+    private ViewMode _lastPrimaryViewMode = ViewMode.Quadrant;
 
     [ObservableProperty]
     private ViewMode _currentViewMode = ViewMode.Quadrant;
@@ -66,6 +73,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private ObservableCollection<TaskItem> completedTasks = new();
 
     [ObservableProperty]
+    private ObservableCollection<TaskItem> deletedTasks = new();
+
+    [ObservableProperty]
     private ObservableCollection<ProjectColumn> projectColumns = new();
 
     [ObservableProperty]
@@ -73,9 +83,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool isLoading;
-
-    [ObservableProperty]
-    private bool showCompletedView; // 保留此属性以维持向后兼容，或者稍后重构
 
     // 项目管理相关属性
     [ObservableProperty]
@@ -90,26 +97,37 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string allProjectsFilterBackground = "#BBDEFB"; // 默认选中"全部"
 
+    [ObservableProperty]
+    private bool isAllProjectsFilterSelected = true;
+
+    [ObservableProperty]
+    private ArchiveViewMode currentArchiveViewMode = ArchiveViewMode.Completed;
+
     public bool HasProjects => Projects.Count > 0;
 
-    public string ToggleButtonText
+    public string ArchiveButtonText
     {
         get
         {
             var lang = LocalizationManager.Instance.CurrentLanguage;
-            return CurrentViewMode switch
+            if (CurrentViewMode != ViewMode.Archive)
             {
-                ViewMode.Quadrant => lang == "zh-CN" ? "查看项目看板" : "Show Project Board",
-                ViewMode.ProjectBoard => lang == "zh-CN" ? "查看已完成" : "Show Completed",
-                ViewMode.Completed => lang == "zh-CN" ? "查看四象限" : "Show Quadrants",
-                _ => "Toggle View"
-            };
+                return lang == "zh-CN" ? "查看已完成" : "Show Completed";
+            }
+
+            return CurrentArchiveViewMode == ArchiveViewMode.Completed
+                ? (lang == "zh-CN" ? "查看已删除" : "Show Deleted")
+                : (lang == "zh-CN" ? "返回主视图" : "Back To Main View");
         }
     }
 
     public bool IsQuadrantView => CurrentViewMode == ViewMode.Quadrant;
     public bool IsProjectBoardView => CurrentViewMode == ViewMode.ProjectBoard;
-    public bool IsCompletedView => CurrentViewMode == ViewMode.Completed;
+    public bool IsArchiveView => CurrentViewMode == ViewMode.Archive;
+    public bool IsCompletedView => IsArchiveView && CurrentArchiveViewMode == ArchiveViewMode.Completed;
+    public bool IsDeletedView => IsArchiveView && CurrentArchiveViewMode == ArchiveViewMode.Deleted;
+    public bool IsQuadrantPrimarySelected => CurrentViewMode == ViewMode.Quadrant || (IsArchiveView && _lastPrimaryViewMode == ViewMode.Quadrant);
+    public bool IsProjectBoardPrimarySelected => CurrentViewMode == ViewMode.ProjectBoard || (IsArchiveView && _lastPrimaryViewMode == ViewMode.ProjectBoard);
 
     public string ToggleLanguageButtonText => LocalizationManager.Instance.CurrentLanguage == "zh-CN" ? "EN" : "中文";
 
@@ -118,7 +136,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         var newLang = LocalizationManager.Instance.CurrentLanguage == "zh-CN" ? "en-US" : "zh-CN";
         LocalizationManager.Instance.SetLanguage(newLang);
-        OnPropertyChanged(nameof(ToggleButtonText));
+        OnPropertyChanged(nameof(ArchiveButtonText));
         OnPropertyChanged(nameof(ToggleLanguageButtonText));
     }
 
@@ -176,11 +194,16 @@ public partial class MainWindowViewModel : ViewModelBase
             Q3Tasks.Clear();
             Q4Tasks.Clear();
             CompletedTasks.Clear();
+            DeletedTasks.Clear();
             ProjectColumns.Clear();
 
             foreach (var task in filteredTasks)
             {
-                if (task.IsCompleted)
+                if (task.IsDeleted)
+                {
+                    DeletedTasks.Add(task);
+                }
+                else if (task.IsCompleted)
                 {
                     CompletedTasks.Add(task);
                 }
@@ -197,7 +220,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }
 
             // 填充项目看板列
-            var uncompletedTasks = filteredTasks.Where(t => !t.IsCompleted).ToList();
+            var uncompletedTasks = filteredTasks.Where(t => !t.IsCompleted && !t.IsDeleted).ToList();
             
             // 1. 创建"未分类"列 (如果存在未分类任务或已有项目)
             var uncategorizedTasks = uncompletedTasks.Where(t => string.IsNullOrEmpty(t.ProjectId)).ToList();
@@ -287,10 +310,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async Task<TaskItem?> ShowTaskEditDialog(TaskEditDialogViewModel dialog)
     {
-        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            && desktop.MainWindow is Window mainWindow)
         {
             var window = new Views.TaskEditDialog(dialog);
-            var result = await window.ShowDialog<TaskItem?>(desktop.MainWindow);
+            var result = await window.ShowDialog<TaskItem?>(mainWindow);
             return result;
         }
         return null;
@@ -331,36 +355,64 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ToggleView()
+    private void ShowQuadrantView()
     {
-        CurrentViewMode = CurrentViewMode switch
+        SetCurrentView(ViewMode.Quadrant);
+    }
+
+    [RelayCommand]
+    private void ShowProjectBoardView()
+    {
+        SetCurrentView(ViewMode.ProjectBoard);
+    }
+
+    [RelayCommand]
+    private void ToggleArchiveView()
+    {
+        if (CurrentViewMode != ViewMode.Archive)
         {
-            ViewMode.Quadrant => ViewMode.ProjectBoard,
-            ViewMode.ProjectBoard => ViewMode.Completed,
-            ViewMode.Completed => ViewMode.Quadrant,
-            _ => ViewMode.Quadrant
-        };
+            CurrentArchiveViewMode = ArchiveViewMode.Completed;
+            SetCurrentView(ViewMode.Archive);
+            return;
+        }
 
-        // 同步旧的布尔值以保持兼容性
-        ShowCompletedView = IsCompletedView;
+        if (CurrentArchiveViewMode == ArchiveViewMode.Completed)
+        {
+            CurrentArchiveViewMode = ArchiveViewMode.Deleted;
+            NotifyViewStateChanged();
+            return;
+        }
 
-        OnPropertyChanged(nameof(ToggleButtonText));
-        OnPropertyChanged(nameof(IsQuadrantView));
-        OnPropertyChanged(nameof(IsProjectBoardView));
-        OnPropertyChanged(nameof(IsCompletedView));
-        
-        // 重新加载以确保看板数据是最新的
-        _ = LoadTasksAsync();
+        SetCurrentView(_lastPrimaryViewMode);
     }
 
     [RelayCommand]
     private async Task RestoreTask(TaskItem task)
     {
-        if (task != null && task.IsCompleted)
+        if (task == null) return;
+
+        if (task.IsDeleted)
+        {
+            task.IsDeleted = false;
+            task.DeletedAt = null;
+        }
+
+        if (task.IsCompleted)
         {
             task.IsCompleted = false;
             task.CompletedAt = null;
-            await _taskService.UpdateTaskAsync(task);
+        }
+
+        await _taskService.UpdateTaskAsync(task);
+        await LoadTasksAsync();
+    }
+
+    [RelayCommand]
+    private async Task PermanentlyDeleteTask(TaskItem task)
+    {
+        if (task != null)
+        {
+            await _taskService.PermanentlyDeleteTaskAsync(task.Id);
             await LoadTasksAsync();
         }
     }
@@ -390,6 +442,7 @@ public partial class MainWindowViewModel : ViewModelBase
             // "全部"选项 - 清空筛选
             SelectedProjectIds.Clear();
             AllProjectsFilterBackground = "#BBDEFB";
+            IsAllProjectsFilterSelected = true;
         }
         else
         {
@@ -403,17 +456,21 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 SelectedProjectIds.Add(projectId);
             }
+
+            IsAllProjectsFilterSelected = SelectedProjectIds.Count == 0;
         }
 
+        UpdateProjectFilterSelectionState();
         ApplyProjectFilter();
     }
 
     private async Task ShowProjectManagementDialog(ProjectManagementDialogViewModel dialog)
     {
-        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            && desktop.MainWindow is Window mainWindow)
         {
             var window = new ProjectManagementDialog(dialog);
-            await window.ShowDialog(desktop.MainWindow);
+            await window.ShowDialog(mainWindow);
         }
     }
 
@@ -428,6 +485,8 @@ public partial class MainWindowViewModel : ViewModelBase
             Projects.Add(project);
         }
 
+        UpdateProjectFilterSelectionState();
+
         // 通知HasProjects属性变更
         OnPropertyChanged(nameof(HasProjects));
     }
@@ -436,5 +495,37 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         // 触发重新加载
         _ = LoadTasksAsync();
+    }
+
+    private void UpdateProjectFilterSelectionState()
+    {
+        foreach (var project in Projects)
+        {
+            project.IsFilterSelected = SelectedProjectIds.Contains(project.Id);
+        }
+    }
+
+    private void SetCurrentView(ViewMode viewMode)
+    {
+        if (viewMode != ViewMode.Archive)
+        {
+            _lastPrimaryViewMode = viewMode;
+        }
+
+        CurrentViewMode = viewMode;
+        NotifyViewStateChanged();
+        _ = LoadTasksAsync();
+    }
+
+    private void NotifyViewStateChanged()
+    {
+        OnPropertyChanged(nameof(ArchiveButtonText));
+        OnPropertyChanged(nameof(IsQuadrantView));
+        OnPropertyChanged(nameof(IsProjectBoardView));
+        OnPropertyChanged(nameof(IsArchiveView));
+        OnPropertyChanged(nameof(IsCompletedView));
+        OnPropertyChanged(nameof(IsDeletedView));
+        OnPropertyChanged(nameof(IsQuadrantPrimarySelected));
+        OnPropertyChanged(nameof(IsProjectBoardPrimarySelected));
     }
 }

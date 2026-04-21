@@ -39,6 +39,12 @@ public partial class Project : ObservableObject
     [ObservableProperty]
     private bool isArchived = false;
 
+    /// <summary>
+    /// 是否在左侧筛选列表中被选中
+    /// </summary>
+    [ObservableProperty]
+    private bool isFilterSelected = false;
+
     public Project() { }
 
     public Project(string name, string color = "#2196F3")
