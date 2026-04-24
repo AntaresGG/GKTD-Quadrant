@@ -43,14 +43,22 @@
 ### Requirements
 
 - Windows 10 / 11 x64
-- No runtime installation needed (self-contained)
-- Disk space: ~100 MB
+- .NET 8 x64 Runtime installed
+- Disk space: ~30 MB
 
 ### Installation
 
-1. Go to [Releases](https://github.com/AntaresGG/GKTD-Quadrant/releases) and download `QuadrantGTD.exe`
-2. Run directly — no installation required
-3. Data is saved automatically to `%APPDATA%\QuadrantGTD\`
+1. Go to [Releases](https://github.com/AntaresGG/GKTD-Quadrant/releases) and download the full `publish` package
+2. If needed, install the .NET 8 x64 Runtime first
+3. Keep `QuadrantGTD.exe` and the bundled native `.dll` files in the same folder
+4. Run `QuadrantGTD.exe`
+5. Data is saved automatically to `%APPDATA%\QuadrantGTD\`
+
+### Runtime Note
+
+Starting with the portable package published on 2026-04-24, `QuadrantGTD.exe` no longer bundles the .NET runtime.
+If the target machine does not already have .NET 8 x64 installed, install the runtime first and then launch the app.
+The package still includes native graphics libraries, so do not distribute the `.exe` alone.
 
 ### Basic Usage
 
@@ -107,8 +115,8 @@ dotnet run --project src/QuadrantGTD
 # Run tests
 dotnet test
 
-# Publish Windows x64 single-file
-dotnet publish src/QuadrantGTD -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+# Publish Windows x64 portable package
+dotnet publish src/QuadrantGTD -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true
 ```
 
 ---

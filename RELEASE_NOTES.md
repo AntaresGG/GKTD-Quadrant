@@ -6,6 +6,24 @@
 
 ---
 
+## 📦 发布说明补充（2026-04-24）
+
+为减小 `publish/QuadrantGTD.exe` 体积，当前发布已切换为 **portable** 方案，不再内置 .NET 运行时。
+
+### 影响
+- `publish` 目录路径保持不变
+- `QuadrantGTD.exe` 体积显著下降
+- 但发布包仍需保留随附的原生 `.dll` 文件
+- 目标机器需要预先安装 **.NET 8 x64 Runtime**
+
+### 使用要求
+1. 确认系统为 Windows 10/11 x64
+2. 确认已安装 `.NET 8 x64 Runtime`
+3. 保持 `QuadrantGTD.exe` 与发布目录中的原生 `.dll` 文件在同一目录
+4. 再运行 `QuadrantGTD.exe`
+
+---
+
 ## 🎯 主要更新
 
 ### ✨ 按钮响应优化
@@ -158,13 +176,15 @@ App.axaml.cs                           - 依赖注入配置
 
 ### 系统要求
 - **操作系统**: Windows 10/11 x64
-- **运行时**: 无需安装（自包含）
-- **磁盘空间**: ~100MB
+- **运行时**: 需要预先安装 .NET 8 x64 Runtime
+- **磁盘空间**: ~30MB
 
 ### 安装方式
-1. 下载 `QuadrantGTD.exe`
-2. 直接运行（无需安装）
-3. 数据自动存储在 `%APPDATA%/QuadrantGTD/`
+1. 下载完整 `publish` 发布包
+2. 如未安装运行时，先安装 .NET 8 x64 Runtime
+3. 保持 `QuadrantGTD.exe` 与同目录原生 `.dll` 文件不分离
+4. 直接运行（无需安装）
+5. 数据自动存储在 `%APPDATA%/QuadrantGTD/`
 
 ### 首次运行
 - 自动创建数据目录
@@ -186,5 +206,5 @@ App.axaml.cs                           - 依赖注入配置
 
 **发布者**: Claude Sonnet 4.6
 **发布时间**: 2026-03-27 12:31
-**文件大小**: 92MB
+**文件大小**: 当前 `QuadrantGTD.exe` 约 13.7MB，完整 `publish` 包约 29MB
 **文件位置**: `D:\MyProjectRepo\GKTD\publish\QuadrantGTD.exe`
