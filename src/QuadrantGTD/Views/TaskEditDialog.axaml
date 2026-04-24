@@ -80,7 +80,7 @@
                     <!-- Due Date -->
                     <StackPanel Grid.Column="2" Spacing="8">
                         <TextBlock Text="{DynamicResource DueDate}" FontSize="13" FontWeight="SemiBold" Foreground="#64748B"/>
-                        <DatePicker SelectedDate="{Binding DueDate}" HorizontalAlignment="Stretch" CornerRadius="10"/>
+                        <DatePicker SelectedDate="{Binding DueDateOffset}" HorizontalAlignment="Stretch" CornerRadius="10"/>
                     </StackPanel>
                 </Grid>
 

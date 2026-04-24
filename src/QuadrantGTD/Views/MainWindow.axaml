@@ -261,20 +261,52 @@
                                             <ItemsControl ItemsSource="{Binding Tasks}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate x:DataType="models:TaskItem">
-                                                        <Border Classes="TaskCard" Padding="10" Margin="0,0,0,8">
-                                                            <Grid RowDefinitions="Auto, Auto">
-                                                                <TextBlock Grid.Row="0" Text="{Binding Title}" TextWrapping="Wrap" FontSize="12" FontWeight="Medium" Foreground="#1E293B" Margin="0,0,0,6"/>
-                                                                
-                                                                <!-- Actions and Compact Badge -->
-                                                                <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
-                                                                    <Border Grid.Column="0" HorizontalAlignment="Left" CornerRadius="3" Padding="4,1" Background="#E2E8F0" Opacity="0.6">
-                                                                        <TextBlock Text="{Binding Quadrant}" FontSize="8" FontWeight="Bold" Foreground="#64748B"/>
-                                                                    </Border>
-                                                                    
-                                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2">
+                                                        <Border Classes="TaskCard" Padding="8" Margin="0,0,0,6">
+                                                            <Grid RowDefinitions="Auto, Auto, Auto">
+                                                                <Border Grid.Row="0"
+                                                                        HorizontalAlignment="Left"
+                                                                        CornerRadius="999"
+                                                                        Padding="6,2"
+                                                                        Background="{Binding ProjectDisplayColor}"
+                                                                        Opacity="0.9"
+                                                                        Margin="0,0,0,4"
+                                                                        IsVisible="{Binding HasProject}">
+                                                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                        <Ellipse Width="5" Height="5" Fill="White" VerticalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding ProjectDisplayName}" FontSize="9" FontWeight="SemiBold" Foreground="White"/>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                                <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,4">
+                                                                    <TextBlock Grid.Column="0"
+                                                                               Text="{Binding Title}"
+                                                                               TextWrapping="Wrap"
+                                                                               FontSize="12"
+                                                                               FontWeight="Medium"
+                                                                               Foreground="#1E293B"
+                                                                               Margin="0,0,6,0"/>
+                                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2" VerticalAlignment="Top">
                                                                         <Button Content="✏️" Classes="IconButton" Command="{Binding $parent[Window].DataContext.EditTaskCommand}" CommandParameter="{Binding}" Padding="2" FontSize="9"/>
                                                                         <Button Content="✔️" Classes="IconButton" Command="{Binding $parent[Window].DataContext.CompleteTaskCommand}" CommandParameter="{Binding}" Padding="2" FontSize="9"/>
                                                                     </StackPanel>
+                                                                </Grid>
+                                                                
+                                                                <Grid Grid.Row="2" ColumnDefinitions="*">
+                                                                    <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="4">
+                                                                        <Border HorizontalAlignment="Left" CornerRadius="3" Padding="4,1" Background="#E2E8F0" Opacity="0.6">
+                                                                            <TextBlock Text="{Binding Quadrant}" FontSize="8" FontWeight="Bold" Foreground="#64748B"/>
+                                                                        </Border>
+                                                                        <StackPanel Orientation="Horizontal"
+                                                                                    Spacing="4"
+                                                                                    IsVisible="{Binding HasDueDate}">
+                                                                            <TextBlock Text="📅" FontSize="9" VerticalAlignment="Center"/>
+                                                                            <TextBlock Text="{Binding DueDate, StringFormat='{}{0:yyyy-MM-dd}'}"
+                                                                                       FontSize="8"
+                                                                                       FontWeight="Medium"
+                                                                                       Foreground="#64748B"
+                                                                                       VerticalAlignment="Center"/>
+                                                                        </StackPanel>
+                                                                    </StackPanel>
+                                                                    
                                                                 </Grid>
                                                             </Grid>
                                                         </Border>
@@ -312,25 +344,46 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="models:TaskItem">
-                                        <Border Classes="TaskCard" Width="300" Margin="10" Padding="16">
+                                        <Border Classes="TaskCard" Width="300" Margin="8" Padding="12">
                                             <Grid>
                                                 <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="*"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
-                                                <TextBlock Grid.Row="0" Text="{Binding Title}" TextWrapping="Wrap" FontSize="14" 
-                                                           Foreground="#64748B" TextDecorations="Strikethrough" Margin="0,0,0,12"/>
-                                                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="4" Margin="0,0,0,12">
+                                                <Border Grid.Row="0"
+                                                        HorizontalAlignment="Left"
+                                                        CornerRadius="999"
+                                                        Padding="7,3"
+                                                        Background="{Binding ProjectDisplayColor}"
+                                                        Opacity="0.9"
+                                                        Margin="0,0,0,8"
+                                                        IsVisible="{Binding HasProject}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                        <Ellipse Width="6" Height="6" Fill="White" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding ProjectDisplayName}" FontSize="10" FontWeight="SemiBold" Foreground="White"/>
+                                                    </StackPanel>
+                                                </Border>
+                                                <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                                                    <TextBlock Grid.Column="0" Text="{Binding Title}" TextWrapping="Wrap" FontSize="14" 
+                                                               Foreground="#64748B" TextDecorations="Strikethrough" Margin="0,0,8,0"/>
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                                                        <Button Content="{DynamicResource Restore}" Classes="IconButton RestoreButton" 
+                                                                Command="{Binding $parent[Window].DataContext.RestoreTaskCommand}" CommandParameter="{Binding}"
+                                                                Padding="12,4" FontSize="11"/>
+                                                        <Button Content="🗑️" Classes="IconButton DeleteButton" 
+                                                                Command="{Binding $parent[Window].DataContext.DeleteTaskCommand}" CommandParameter="{Binding}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="4" Margin="0,0,0,8">
+                                                    <TextBlock Text="📅" FontSize="10" Foreground="#94A3B8" IsVisible="{Binding HasDueDate}"/>
+                                                    <TextBlock Text="{Binding DueDate, StringFormat='{}{0:yyyy-MM-dd}'}" FontSize="10" Foreground="#94A3B8" IsVisible="{Binding HasDueDate}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="4" Margin="0,0,0,8">
                                                     <TextBlock Text="{DynamicResource CompletedAt}" FontSize="10" Foreground="#94A3B8"/>
                                                     <TextBlock Text="{Binding CompletedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" FontSize="10" Foreground="#94A3B8"/>
-                                                </StackPanel>
-                                                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                                                    <Button Content="{DynamicResource Restore}" Classes="IconButton RestoreButton" 
-                                                            Command="{Binding $parent[Window].DataContext.RestoreTaskCommand}" CommandParameter="{Binding}"
-                                                            Padding="12,4" FontSize="11"/>
-                                                    <Button Content="🗑️" Classes="IconButton DeleteButton" 
-                                                            Command="{Binding $parent[Window].DataContext.DeleteTaskCommand}" CommandParameter="{Binding}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Border>
@@ -364,26 +417,47 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="models:TaskItem">
-                                        <Border Classes="TaskCard" Width="300" Margin="10" Padding="16">
+                                        <Border Classes="TaskCard" Width="300" Margin="8" Padding="12">
                                             <Grid>
                                                 <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="*"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
-                                                <TextBlock Grid.Row="0" Text="{Binding Title}" TextWrapping="Wrap" FontSize="14"
-                                                           Foreground="#64748B" Margin="0,0,0,12"/>
-                                                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="4" Margin="0,0,0,12">
+                                                <Border Grid.Row="0"
+                                                        HorizontalAlignment="Left"
+                                                        CornerRadius="999"
+                                                        Padding="7,3"
+                                                        Background="{Binding ProjectDisplayColor}"
+                                                        Opacity="0.9"
+                                                        Margin="0,0,0,8"
+                                                        IsVisible="{Binding HasProject}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                        <Ellipse Width="6" Height="6" Fill="White" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding ProjectDisplayName}" FontSize="10" FontWeight="SemiBold" Foreground="White"/>
+                                                    </StackPanel>
+                                                </Border>
+                                                <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                                                    <TextBlock Grid.Column="0" Text="{Binding Title}" TextWrapping="Wrap" FontSize="14"
+                                                               Foreground="#64748B" Margin="0,0,8,0"/>
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                                                        <Button Content="{DynamicResource Restore}" Classes="IconButton RestoreButton"
+                                                                Command="{Binding $parent[Window].DataContext.RestoreTaskCommand}" CommandParameter="{Binding}"
+                                                                Padding="12,4" FontSize="11"/>
+                                                        <Button Content="{DynamicResource DeletePermanently}" Classes="DeleteButton"
+                                                                Command="{Binding $parent[Window].DataContext.PermanentlyDeleteTaskCommand}" CommandParameter="{Binding}"
+                                                                Padding="12,4" FontSize="11"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="4" Margin="0,0,0,8">
+                                                    <TextBlock Text="📅" FontSize="10" Foreground="#94A3B8" IsVisible="{Binding HasDueDate}"/>
+                                                    <TextBlock Text="{Binding DueDate, StringFormat='{}{0:yyyy-MM-dd}'}" FontSize="10" Foreground="#94A3B8" IsVisible="{Binding HasDueDate}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="4" Margin="0,0,0,8">
                                                     <TextBlock Text="{DynamicResource DeletedAt}" FontSize="10" Foreground="#94A3B8"/>
                                                     <TextBlock Text="{Binding DeletedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" FontSize="10" Foreground="#94A3B8"/>
-                                                </StackPanel>
-                                                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                                                    <Button Content="{DynamicResource Restore}" Classes="IconButton RestoreButton"
-                                                            Command="{Binding $parent[Window].DataContext.RestoreTaskCommand}" CommandParameter="{Binding}"
-                                                            Padding="12,4" FontSize="11"/>
-                                                    <Button Content="{DynamicResource DeletePermanently}" Classes="DeleteButton"
-                                                            Command="{Binding $parent[Window].DataContext.PermanentlyDeleteTaskCommand}" CommandParameter="{Binding}"
-                                                            Padding="12,4" FontSize="11"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Border>
@@ -400,28 +474,58 @@
     <Window.Resources>
         <!-- Task Item Template used across quadrants -->
         <DataTemplate x:Key="TaskItemTemplate" x:DataType="models:TaskItem">
-            <Border Classes="TaskCard" Padding="14">
+            <Border Classes="TaskCard" Padding="10">
                 <i:Interaction.Behaviors>
                     <behaviors:DragDropBehavior TaskItem="{Binding}"/>
                 </i:Interaction.Behaviors>
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="{Binding Title}" TextWrapping="Wrap" FontSize="14" FontWeight="Medium" 
-                               Foreground="#1E293B" LineHeight="20" Margin="0,0,0,12"/>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                        <Button Content="✏️" Classes="IconButton EditButton" 
-                                Command="{Binding $parent[Window].DataContext.EditTaskCommand}" CommandParameter="{Binding}"
-                                ToolTip.Tip="{DynamicResource Edit}"/>
-                        <Button Content="✔️" Classes="IconButton CompleteButton" 
-                                Command="{Binding $parent[Window].DataContext.CompleteTaskCommand}" CommandParameter="{Binding}"
-                                ToolTip.Tip="{DynamicResource Complete}"/>
-                        <Button Content="🗑️" Classes="IconButton DeleteButton" 
-                                Command="{Binding $parent[Window].DataContext.DeleteTaskCommand}" CommandParameter="{Binding}"
-                                ToolTip.Tip="{DynamicResource Delete}"/>
-                    </StackPanel>
+                    <Border Grid.Row="0"
+                            HorizontalAlignment="Left"
+                            CornerRadius="999"
+                            Padding="7,3"
+                            Background="{Binding ProjectDisplayColor}"
+                            Opacity="0.9"
+                            Margin="0,0,0,6"
+                            IsVisible="{Binding HasProject}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Ellipse Width="6" Height="6" Fill="White" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ProjectDisplayName}" FontSize="10" FontWeight="SemiBold" Foreground="White"/>
+                        </StackPanel>
+                    </Border>
+                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+                        <TextBlock Grid.Column="0" Text="{Binding Title}" TextWrapping="Wrap" FontSize="14" FontWeight="Medium" 
+                                   Foreground="#1E293B" LineHeight="18" Margin="0,0,8,0"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="6" VerticalAlignment="Top">
+                            <Button Content="✏️" Classes="IconButton EditButton" 
+                                    Command="{Binding $parent[Window].DataContext.EditTaskCommand}" CommandParameter="{Binding}"
+                                    ToolTip.Tip="{DynamicResource Edit}"/>
+                            <Button Content="✔️" Classes="IconButton CompleteButton" 
+                                    Command="{Binding $parent[Window].DataContext.CompleteTaskCommand}" CommandParameter="{Binding}"
+                                    ToolTip.Tip="{DynamicResource Complete}"/>
+                            <Button Content="🗑️" Classes="IconButton DeleteButton" 
+                                    Command="{Binding $parent[Window].DataContext.DeleteTaskCommand}" CommandParameter="{Binding}"
+                                    ToolTip.Tip="{DynamicResource Delete}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="2" ColumnDefinitions="*" VerticalAlignment="Center">
+                        <StackPanel Grid.Column="0"
+                                    Orientation="Horizontal"
+                                    Spacing="4"
+                                    VerticalAlignment="Center"
+                                    IsVisible="{Binding HasDueDate}">
+                            <TextBlock Text="📅" FontSize="10" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding DueDate, StringFormat='{}{0:yyyy-MM-dd}'}"
+                                       FontSize="10"
+                                       FontWeight="Medium"
+                                       Foreground="#64748B"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </Border>
         </DataTemplate>

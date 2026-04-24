@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace QuadrantGTD.Models;
@@ -43,6 +44,30 @@ public partial class TaskItem : ObservableObject
 
     [ObservableProperty]
     private string? projectId;
+
+    [ObservableProperty]
+    [JsonIgnore]
+    private string? projectDisplayName;
+
+    [ObservableProperty]
+    [JsonIgnore]
+    private string projectDisplayColor = "#94A3B8";
+
+    [JsonIgnore]
+    public bool HasProject => !string.IsNullOrWhiteSpace(ProjectDisplayName);
+
+    [JsonIgnore]
+    public bool HasDueDate => DueDate.HasValue;
+
+    partial void OnDueDateChanged(DateTime? value)
+    {
+        OnPropertyChanged(nameof(HasDueDate));
+    }
+
+    partial void OnProjectDisplayNameChanged(string? value)
+    {
+        OnPropertyChanged(nameof(HasProject));
+    }
 
     public TaskItem()
     {

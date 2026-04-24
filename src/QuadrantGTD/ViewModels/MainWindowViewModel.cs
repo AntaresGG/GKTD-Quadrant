@@ -183,6 +183,21 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             IsLoading = true;
             var allTasks = await _taskService.GetAllTasksAsync();
+            var projectLookup = Projects.ToDictionary(p => p.Id, p => p);
+
+            foreach (var task in allTasks)
+            {
+                if (!string.IsNullOrEmpty(task.ProjectId) && projectLookup.TryGetValue(task.ProjectId, out var project))
+                {
+                    task.ProjectDisplayName = project.Name;
+                    task.ProjectDisplayColor = project.Color;
+                }
+                else
+                {
+                    task.ProjectDisplayName = null;
+                    task.ProjectDisplayColor = "#94A3B8";
+                }
+            }
 
             // 应用项目筛选
             var filteredTasks = (SelectedProjectIds.Count == 0

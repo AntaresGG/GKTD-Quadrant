@@ -30,6 +30,9 @@ public partial class TaskEditDialogViewModel : ViewModelBase
     private DateTime? dueDate;
 
     [ObservableProperty]
+    private DateTimeOffset? dueDateOffset;
+
+    [ObservableProperty]
     private string dialogTitle = "新建任务";
 
     [ObservableProperty]
@@ -86,6 +89,7 @@ public partial class TaskEditDialogViewModel : ViewModelBase
         SelectedQuadrantItem = Quadrants.First(q => q.Value == Quadrant.NotUrgentImportant);
         SelectedPriority = Priority.Medium;
         DueDate = null;
+        DueDateOffset = null;
         SelectedProject = Projects.FirstOrDefault(); // 默认"无项目"
     }
 
@@ -104,6 +108,7 @@ public partial class TaskEditDialogViewModel : ViewModelBase
         SelectedQuadrantItem = Quadrants.First(q => q.Value == task.Quadrant);
         SelectedPriority = task.Priority;
         DueDate = task.DueDate;
+        DueDateOffset = task.DueDate.HasValue ? new DateTimeOffset(task.DueDate.Value) : null;
 
         // 设置项目选择
         SelectedProject = string.IsNullOrEmpty(task.ProjectId)
@@ -134,12 +139,17 @@ public partial class TaskEditDialogViewModel : ViewModelBase
             Description = Description,
             Quadrant = SelectedQuadrantItem?.Value ?? Quadrant.NotUrgentImportant,
             Priority = SelectedPriority,
-            DueDate = DueDate,
+            DueDate = DueDateOffset?.Date,
             ProjectId = SelectedProject?.Id ?? "",
             CreatedAt = EditingTask?.CreatedAt ?? DateTime.Now,
             IsCompleted = EditingTask?.IsCompleted ?? false,
             CompletedAt = EditingTask?.CompletedAt
         };
+    }
+
+    partial void OnDueDateOffsetChanged(DateTimeOffset? value)
+    {
+        DueDate = value?.Date;
     }
 
     private static string GetQuadrantName(Quadrant quadrant)
